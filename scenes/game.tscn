@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2fdxd045jrlx"]
+[gd_scene load_steps=4 format=3 uid="uid://d2fdxd045jrlx"]
 
 [ext_resource type="Texture2D" uid="uid://h57tj6qm6a6r" path="res://assets/cookie.png" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://d1t24il8ynhho" path="res://scripts/game.gd" id="1_yqjtg"]
+[ext_resource type="Script" uid="uid://ehdkpqqt1t3g" path="res://scripts/stats.gd" id="3_lnu2h"]
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -9,13 +11,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_yqjtg")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 
-[node name="TextureButton" type="TextureButton" parent="CenterContainer"]
+[node name="ClickButton" type="TextureButton" parent="CenterContainer"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 texture_normal = ExtResource("1_uwrxv")
@@ -28,6 +31,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 23.0
 grow_horizontal = 2
+script = ExtResource("3_lnu2h")
 
 [node name="Label" type="Label" parent="VBoxContainer"]
 custom_minimum_size = Vector2(40, 40)
@@ -35,3 +39,6 @@ layout_mode = 2
 text = "0 cookies"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[connection signal="on_cookies_changed" from="." to="VBoxContainer" method="_on_game_on_cookies_changed"]
+[connection signal="button_down" from="CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
