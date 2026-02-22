@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2fdxd045jrlx"]
+[gd_scene load_steps=9 format=3 uid="uid://d2fdxd045jrlx"]
 
 [ext_resource type="Texture2D" uid="uid://h57tj6qm6a6r" path="res://assets/cookie.png" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://d1t24il8ynhho" path="res://scripts/game.gd" id="1_yqjtg"]
+[ext_resource type="Script" uid="uid://dyh2j73yhy4nw" path="res://scenes/animations.gd" id="2_p57ef"]
 [ext_resource type="Script" uid="uid://ehdkpqqt1t3g" path="res://scripts/stats.gd" id="3_lnu2h"]
 [ext_resource type="FontFile" uid="uid://bf8i1yxmqhlhu" path="res://assets/Fredoka/static/Fredoka-Regular.ttf" id="4_lbhrr"]
 [ext_resource type="FontFile" uid="uid://dr8gcsaa6uhvv" path="res://assets/Fredoka/static/Fredoka-Bold.ttf" id="5_iywne"]
@@ -47,6 +48,7 @@ theme_override_constants/margin_left = 40
 theme_override_constants/margin_top = 40
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
+script = ExtResource("2_p57ef")
 
 [node name="StatsContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
 layout_mode = 2
@@ -110,3 +112,5 @@ vertical_alignment = 1
 
 [connection signal="on_cookies_changed" from="." to="Panel/MarginContainer/StatsContainer" method="_on_game_on_cookies_changed"]
 [connection signal="button_down" from="Panel/MarginContainer/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
+[connection signal="button_down" from="Panel/MarginContainer/CenterContainer/ClickButton" to="Panel/MarginContainer" method="_on_click_button_button_down"]
+[connection signal="button_up" from="Panel/MarginContainer/CenterContainer/ClickButton" to="Panel/MarginContainer" method="_on_click_button_button_up"]
