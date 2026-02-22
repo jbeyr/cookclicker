@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2fdxd045jrlx"]
+
+[ext_resource type="Texture2D" uid="uid://h57tj6qm6a6r" path="res://assets/cookie.png" id="1_uwrxv"]
+
+[node name="Game" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="TextureButton" type="TextureButton" parent="CenterContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("1_uwrxv")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+text = "0 cookies"
+horizontal_alignment = 1
+vertical_alignment = 1
