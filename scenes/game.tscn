@@ -140,6 +140,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yqjtg")
+cookies = null
+total_cookies = null
+upgrade_definitions = null
+cookies_per_click = null
+cookies_per_second = null
+click_multiplier = null
+double_click_chance = null
+autosave_interval = null
 debug_autoclicker_enabled = true
 debug_autoclicker_cps = 60.0
 

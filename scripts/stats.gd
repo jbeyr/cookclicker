@@ -4,8 +4,8 @@ extends VBoxContainer
 @onready var per_second_label = $PerSecondLabel
 
 func _ready() -> void:
-	EventBus.cookies_changed.connect(_on_cookies_changed)
-	EventBus.cookies_per_second_changed.connect(_on_cps_changed)
+	UnorderedEventBus.cookies_changed.connect(_on_cookies_changed)
+	UnorderedEventBus.cookies_per_second_changed.connect(_on_cps_changed)
 
 func _on_cookies_changed(cookies) -> void:
 	cookies_label.text = str(int(cookies)) + " cookies"

@@ -30,17 +30,17 @@ func _on_click_button_button_down() -> void:
 	
 	cookies += amt
 	total_cookies += amt
-	EventBus.cookies_changed.emit(cookies)
-	EventBus.total_cookies_changed.emit(total_cookies)
-	EventBus.cookie_clicked.emit(amt)
+	UnorderedEventBus.cookies_changed.emit(cookies)
+	UnorderedEventBus.total_cookies_changed.emit(total_cookies)
+	UnorderedEventBus.cookie_clicked.emit(amt)
 
 func _process(delta: float) -> void:
 	if cookies_per_second > 0:
 		var gain = cookies_per_second * delta
 		cookies += gain
 		total_cookies += gain
-		EventBus.cookies_changed.emit(cookies)
-		EventBus.total_cookies_changed.emit(total_cookies)
+		UnorderedEventBus.cookies_changed.emit(cookies)
+		UnorderedEventBus.total_cookies_changed.emit(total_cookies)
 		
 	# Autoclicker Debug Logic
 	if debug_autoclicker_enabled and debug_autoclicker_cps > 0:
@@ -79,7 +79,7 @@ func _load_game():
 	
 	# Sync UI after loading
 	for id in upgrades:
-		EventBus.upgrade_purchased.emit(id, upgrades[id].count)
+		UnorderedEventBus.upgrade_purchased.emit(id, upgrades[id].count)
 		
 	print("loaded game")
 
@@ -90,17 +90,17 @@ func reset_game():
 # children run _ready() before the parent so if we connect in _ready() we might miss signals
 # connect to signals in _enter_tree() instead of _ready() to avoid this
 func _enter_tree() -> void:
-	EventBus.upgrade_requested.connect(_on_upgrade_requested)
-	EventBus.upgrade_announced.connect(_on_upgrade_announced)
-	EventBus.game_reset.connect(reset_game)
+	UnorderedEventBus.upgrade_requested.connect(_on_upgrade_requested)
+	UnorderedEventBus.upgrade_announced.connect(_on_upgrade_announced)
+	UnorderedEventBus.game_reset.connect(reset_game)
 
 func _ready() -> void:
 	_init_upgrades()
 	_load_game()
 	
-	EventBus.cookies_changed.emit(cookies)
-	EventBus.total_cookies_changed.emit(total_cookies)
-	EventBus.cookies_per_second_changed.emit(cookies_per_second)
+	UnorderedEventBus.cookies_changed.emit(cookies)
+	UnorderedEventBus.total_cookies_changed.emit(total_cookies)
+	UnorderedEventBus.cookies_per_second_changed.emit(cookies_per_second)
 	
 	# init autosave timer
 	var timer = Timer.new()
@@ -111,7 +111,7 @@ func _ready() -> void:
 	# Connect UI buttons
 	var reset_btn = find_child("WipeSaveButton", true, false)
 	if reset_btn:
-		reset_btn.pressed.connect(func(): EventBus.game_reset.emit())
+		reset_btn.pressed.connect(func(): UnorderedEventBus.game_reset.emit())
 
 func _init_upgrades():
 	for upgrade in upgrade_definitions:
@@ -138,8 +138,8 @@ func _on_upgrade_requested(id: String):
 		cookies -= cost
 		up.count += 1
 		_recalculate_stats()
-		EventBus.cookies_changed.emit(cookies)
-		EventBus.upgrade_purchased.emit(id, up.count)
+		UnorderedEventBus.cookies_changed.emit(cookies)
+		UnorderedEventBus.upgrade_purchased.emit(id, up.count)
 		print("SUCCESS: Purchased ", id, ". New count: ", up.count)
 	else:
 		print("FAIL: Not enough cookies for ", id, " (Need ", cost, ")")
@@ -162,5 +162,5 @@ func _recalculate_stats():
 	click_multiplier = new_mult
 	double_click_chance = new_crit
 	
-	EventBus.cookies_per_second_changed.emit(cookies_per_second)
-	EventBus.cookies_per_click_changed.emit(cookies_per_click)
+	UnorderedEventBus.cookies_per_second_changed.emit(cookies_per_second)
+	UnorderedEventBus.cookies_per_click_changed.emit(cookies_per_click)

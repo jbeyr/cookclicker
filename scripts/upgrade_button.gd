@@ -13,19 +13,19 @@ extends Button
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		if upgrade_data:
-			EventBus.upgrade_announced.emit(upgrade_data)
+			UnorderedEventBus.upgrade_announced.emit(upgrade_data)
 			
 		pressed.connect(_on_pressed)
-		EventBus.upgrade_purchased.connect(_on_upgrade_purchased)
-		EventBus.cookies_changed.connect(_on_cookies_changed)
-		EventBus.total_cookies_changed.connect(_on_total_cookies_changed)
+		UnorderedEventBus.upgrade_purchased.connect(_on_upgrade_purchased)
+		UnorderedEventBus.cookies_changed.connect(_on_cookies_changed)
+		UnorderedEventBus.total_cookies_changed.connect(_on_total_cookies_changed)
 	
 	_update_ui()
 
 func _on_pressed():
 	if upgrade_data:
 		print("Button pressed for ID: ", upgrade_data.id)
-		EventBus.upgrade_requested.emit(upgrade_data.id)
+		UnorderedEventBus.upgrade_requested.emit(upgrade_data.id)
 	else:
 		print("Button pressed but NO UPGRADE DATA assigned!")
 

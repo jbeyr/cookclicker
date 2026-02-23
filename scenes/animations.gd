@@ -7,7 +7,7 @@ extends MarginContainer
 func _ready() -> void:
 	# Set pivot to center (200x200 button size)
 	click_button.pivot_offset = click_button.size / 2
-	EventBus.cookie_clicked.connect(_on_cookie_clicked)
+	UnorderedEventBus.cookie_clicked.connect(_on_cookie_clicked)
 
 func visual_pulse():
 	var tween = get_tree().create_tween()
