@@ -1,55 +1,38 @@
 extends Control
 
-const save_path = "user://userdata.save"
-
-@export var cookies = 0
-@export var cookies_per_click = 1
+@export var cookies = 0.0
+@export var cookies_per_click = 1.0
 @export var autosave_interval = 60.0
-
-signal on_cookies_changed
-signal on_cookie_physically_clicked
 
 func _notification(notif_type: int) -> void:
 	if notif_type == NOTIFICATION_WM_CLOSE_REQUEST or notif_type == NOTIFICATION_APPLICATION_PAUSED:
-		savegame()
+		_save_game()
 
 func _on_click_button_button_down() -> void:
 	cookies += cookies_per_click
-	on_cookies_changed.emit(cookies)
-	on_cookie_physically_clicked.emit(cookies_per_click)
+	EventBus.cookies_changed.emit(cookies)
+	EventBus.cookie_clicked.emit(cookies_per_click)
 
-func savegame():
+func _save_game():
 	var dat = {
 		"cookies": cookies,
 		"cookies_per_click": cookies_per_click
 	}
-	var file = FileAccess.open(save_path, FileAccess.WRITE)
-	if (file == null):
-		print("Failed to open save file for writing.")
-		return
-	
-	file.store_var(dat)
-	file.close()
-	print("saved game")
+	SaveManager.save_game(dat)
 
-func loadgame():
-	var file = FileAccess.open(save_path, FileAccess.READ)
-	if (file == null):
-		print("Failed to open save file for reading.")
-		return
-	
-	var dat = file.get_var()
-	cookies = dat.get("cookies", 0)
-	cookies_per_click = dat.get("cookies_per_click", 1)
-	file.close()
+func _load_game():
+	var dat = SaveManager.load_game()
+	if not dat.is_empty():
+		cookies = dat.get("cookies", 0)
+		cookies_per_click = dat.get("cookies_per_click", 1)
 	print("loaded game")
 
 func _ready() -> void:
-	loadgame()
-	emit_signal("on_cookies_changed", cookies)
+	_load_game()
+	EventBus.cookies_changed.emit(cookies)
 	
 	# init autosave timer
 	var timer = Timer.new()
-	timer.timeout.connect(savegame)
-	add_child(timer)	
+	timer.timeout.connect(_save_game)
+	add_child(timer)
 	timer.start(autosave_interval)

@@ -7,6 +7,7 @@ extends MarginContainer
 func _ready() -> void:
 	# Set pivot to center (200x200 button size)
 	click_button.pivot_offset = click_button.size / 2
+	EventBus.cookie_clicked.connect(_on_cookie_clicked)
 
 func _on_click_button_button_down() -> void:
 	print("button down")
@@ -20,10 +21,13 @@ func _on_click_button_button_up() -> void:
 	tween.tween_property(click_button, "scale", Vector2(1.0, 1.0), 0.1).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 
-func _on_game_on_cookie_physically_clicked(amt) -> void:
+func _on_cookie_clicked(amt) -> void:
 	print("cookie physically clicked: " + str(amt))
 	var idctr = template.duplicate()
-	idctr.text = "+" + str(amt)
+	var amt_text = str(amt)
+	if is_equal_approx(amt, round(amt)):
+		amt_text = str(int(amt))
+	idctr.text = "+" + amt_text
 	idctr.position = get_global_mouse_position()
 	idctr.visible = true # hidden by default, so change
 	indicators.add_child(idctr)

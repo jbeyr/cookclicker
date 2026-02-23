@@ -15,6 +15,12 @@ run/main_scene="uid://d2fdxd045jrlx"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+EventBus="*res://singletons/event_bus.gd"
+SceneManager="*res://singletons/scene_manager.gd"
+SaveManager="*res://singletons/save_manager.gd"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

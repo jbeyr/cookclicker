@@ -18,6 +18,21 @@ func _on_destroy_timer_timeout() -> void:
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lnu2h"]
 
+[sub_resource type="Animation" id="Animation_gee14"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
 [sub_resource type="Animation" id="Animation_u5sy4"]
 resource_name = "sunburst_rotate"
 length = 30.0
@@ -33,21 +48,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, 3.141592653589793]
-}
-
-[sub_resource type="Animation" id="Animation_gee14"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gee14"]
@@ -196,8 +196,6 @@ text = "Upgrades"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="on_cookie_physically_clicked" from="." to="LeftPanel/MarginContainer" method="_on_game_on_cookie_physically_clicked"]
-[connection signal="on_cookies_changed" from="." to="LeftPanel/MarginContainer/StatsContainer" method="_on_game_on_cookies_changed"]
 [connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template" method="_on_destroy_timer_timeout"]
 [connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template/DestroyTimer" method="_on_timeout"]
 [connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
