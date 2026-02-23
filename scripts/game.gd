@@ -1,6 +1,7 @@
 extends Control
 
 @export var cookies = 0.0
+@export var total_cookies = 0.0
 @export var upgrade_definitions: Array[UpgradeResource] = []
 @export var cookies_per_click = 1.0
 @export var cookies_per_second = 0.0
@@ -20,13 +21,18 @@ func _on_click_button_button_down() -> void:
 		amt *= 2.0
 	
 	cookies += amt
+	total_cookies += amt
 	EventBus.cookies_changed.emit(cookies)
+	EventBus.total_cookies_changed.emit(total_cookies)
 	EventBus.cookie_clicked.emit(amt)
 
 func _process(delta: float) -> void:
 	if cookies_per_second > 0:
-		cookies += cookies_per_second * delta
+		var gain = cookies_per_second * delta
+		cookies += gain
+		total_cookies += gain
 		EventBus.cookies_changed.emit(cookies)
+		EventBus.total_cookies_changed.emit(total_cookies)
 
 func _save_game():
 	var upgrade_data = {}
@@ -35,6 +41,7 @@ func _save_game():
 		
 	var dat = {
 		"cookies": cookies,
+		"total_cookies": total_cookies,
 		"upgrades": upgrade_data
 	}
 	SaveManager.save_game(dat)
@@ -43,6 +50,7 @@ func _load_game():
 	var dat = SaveManager.load_game()
 	if not dat.is_empty():
 		cookies = dat.get("cookies", 0.0)
+		total_cookies = dat.get("total_cookies", 0.0)
 		var upgrade_counts = dat.get("upgrades", {})
 		for id in upgrade_counts:
 			if upgrades.has(id):
@@ -56,17 +64,23 @@ func _load_game():
 		
 	print("loaded game")
 
+func reset_game():
+	SaveManager.delete_save()
+	get_tree().reload_current_scene()
+
 # children run _ready() before the parent so if we connect in _ready() we might miss signals
 # connect to signals in _enter_tree() instead of _ready() to avoid this
 func _enter_tree() -> void:
 	EventBus.upgrade_requested.connect(_on_upgrade_requested)
 	EventBus.upgrade_announced.connect(_on_upgrade_announced)
+	EventBus.game_reset.connect(reset_game)
 
 func _ready() -> void:
 	_init_upgrades()
 	_load_game()
 	
 	EventBus.cookies_changed.emit(cookies)
+	EventBus.total_cookies_changed.emit(total_cookies) # Added this line
 	EventBus.cookies_per_second_changed.emit(cookies_per_second)
 	
 	# init autosave timer
@@ -74,6 +88,11 @@ func _ready() -> void:
 	timer.timeout.connect(_save_game)
 	add_child(timer)
 	timer.start(autosave_interval)
+	
+	# Connect UI buttons
+	var reset_btn = find_child("WipeSaveButton", true, false)
+	if reset_btn:
+		reset_btn.pressed.connect(func(): EventBus.game_reset.emit())
 
 func _init_upgrades():
 	for upgrade in upgrade_definitions:

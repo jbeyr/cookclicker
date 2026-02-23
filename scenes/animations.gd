@@ -1,6 +1,6 @@
 extends MarginContainer
 
-@onready var click_button = $CenterContainer/ClickButton
+@onready var click_button = $MainVBox/CenterContainer/ClickButton
 @onready var template = $"../../Indicators/Template"
 @onready var indicators = $"../../Indicators"
 

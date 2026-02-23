@@ -18,6 +18,7 @@ func _ready() -> void:
 		pressed.connect(_on_pressed)
 		EventBus.upgrade_purchased.connect(_on_upgrade_purchased)
 		EventBus.cookies_changed.connect(_on_cookies_changed)
+		EventBus.total_cookies_changed.connect(_on_total_cookies_changed)
 	
 	_update_ui()
 
@@ -36,6 +37,14 @@ func _on_upgrade_purchased(id: String, new_count: int):
 func _on_cookies_changed(cookies: float):
 	if upgrade_data:
 		disabled = cookies < upgrade_data.get_cost()
+
+func _on_total_cookies_changed(total: float):
+	_update_visibility(total)
+
+func _update_visibility(total: float):
+	if upgrade_data and not Engine.is_editor_hint():
+		var threshold = upgrade_data.base_cost * upgrade_data.unlock_cost_threshold
+		visible = total >= threshold
 
 func _update_ui():
 	# In tool mode, @onready might not have run yet if the setter is called early

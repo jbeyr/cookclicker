@@ -6,6 +6,7 @@ extends Resource
 @export var description: String
 @export var base_cost: float
 @export var cost_multiplier: float = 1.15
+@export var unlock_cost_threshold: float = 0.5 # 0.5 means it shows up at 50% of base_cost
 
 @export var cookies_per_click_bonus: float = 0.0
 @export var cookies_per_second_bonus: float = 0.0

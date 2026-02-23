@@ -194,11 +194,14 @@ theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 script = ExtResource("2_p57ef")
 
-[node name="StatsContainer" type="VBoxContainer" parent="LeftPanel/MarginContainer"]
+[node name="MainVBox" type="VBoxContainer" parent="LeftPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="StatsContainer" type="VBoxContainer" parent="LeftPanel/MarginContainer/MainVBox"]
 layout_mode = 2
 script = ExtResource("3_lnu2h")
 
-[node name="CookiesLabel" type="Label" parent="LeftPanel/MarginContainer/StatsContainer"]
+[node name="CookiesLabel" type="Label" parent="LeftPanel/MarginContainer/MainVBox/StatsContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_constants/outline_size = 10
@@ -208,7 +211,7 @@ text = "0 cookies"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PerSecondLabel" type="Label" parent="LeftPanel/MarginContainer/StatsContainer"]
+[node name="PerSecondLabel" type="Label" parent="LeftPanel/MarginContainer/MainVBox/StatsContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_lbhrr")
@@ -217,10 +220,20 @@ text = "0 cookies/sec"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="LeftPanel/MarginContainer"]
+[node name="WipeSaveButton" type="Button" parent="LeftPanel/MarginContainer/MainVBox/StatsContainer"]
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("4_lbhrr")
+theme_override_font_sizes/font_size = 12
+text = "Wipe Save"
+flat = true
 
-[node name="ClickButton" type="TextureButton" parent="LeftPanel/MarginContainer/CenterContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="LeftPanel/MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ClickButton" type="TextureButton" parent="LeftPanel/MarginContainer/MainVBox/CenterContainer"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 texture_normal = ExtResource("1_uwrxv")
@@ -305,6 +318,6 @@ upgrade_data = SubResource("Resource_kvuet")
 
 [connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template" method="_on_destroy_timer_timeout"]
 [connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template/DestroyTimer" method="_on_timeout"]
-[connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
-[connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_down"]
-[connection signal="button_up" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_up"]
+[connection signal="button_down" from="LeftPanel/MarginContainer/MainVBox/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
+[connection signal="button_down" from="LeftPanel/MarginContainer/MainVBox/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_down"]
+[connection signal="button_up" from="LeftPanel/MarginContainer/MainVBox/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_up"]
