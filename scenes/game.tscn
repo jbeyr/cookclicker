@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://d2fdxd045jrlx"]
+[gd_scene load_steps=13 format=3 uid="uid://d2fdxd045jrlx"]
 
 [ext_resource type="Texture2D" uid="uid://h57tj6qm6a6r" path="res://assets/cookie.png" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://d1t24il8ynhho" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -6,8 +6,47 @@
 [ext_resource type="Script" uid="uid://ehdkpqqt1t3g" path="res://scripts/stats.gd" id="3_lnu2h"]
 [ext_resource type="FontFile" uid="uid://bf8i1yxmqhlhu" path="res://assets/Fredoka/static/Fredoka-Regular.ttf" id="4_lbhrr"]
 [ext_resource type="FontFile" uid="uid://dr8gcsaa6uhvv" path="res://assets/Fredoka/static/Fredoka-Bold.ttf" id="5_iywne"]
+[ext_resource type="Texture2D" uid="uid://2b4ad45qwtbr" path="res://assets/sunburst.png" id="6_u5sy4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lnu2h"]
+
+[sub_resource type="Animation" id="Animation_u5sy4"]
+resource_name = "sunburst_rotate"
+length = 30.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 30),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 3.141592653589793]
+}
+
+[sub_resource type="Animation" id="Animation_gee14"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gee14"]
+_data = {
+&"RESET": SubResource("Animation_gee14"),
+&"sunburst_rotate": SubResource("Animation_u5sy4")
+}
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iywne"]
 content_margin_left = 10.0
@@ -29,7 +68,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yqjtg")
 
-[node name="Panel" type="Panel" parent="."]
+[node name="LeftPanel" type="Panel" parent="."]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
@@ -37,7 +76,18 @@ offset_right = 825.0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_lnu2h")
 
-[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+[node name="BackgroundTextureRect" type="TextureRect" parent="LeftPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(412.5, 324)
+texture = ExtResource("6_u5sy4")
+expand_mode = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="LeftPanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -50,11 +100,11 @@ theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 script = ExtResource("2_p57ef")
 
-[node name="StatsContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+[node name="StatsContainer" type="VBoxContainer" parent="LeftPanel/MarginContainer"]
 layout_mode = 2
 script = ExtResource("3_lnu2h")
 
-[node name="CookiesLabel" type="Label" parent="Panel/MarginContainer/StatsContainer"]
+[node name="CookiesLabel" type="Label" parent="LeftPanel/MarginContainer/StatsContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_constants/outline_size = 10
@@ -64,7 +114,7 @@ text = "0 cookies"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PerSecondLabel" type="Label" parent="Panel/MarginContainer/StatsContainer"]
+[node name="PerSecondLabel" type="Label" parent="LeftPanel/MarginContainer/StatsContainer"]
 custom_minimum_size = Vector2(40, 40)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_lbhrr")
@@ -73,15 +123,22 @@ text = "0 cookies/sec"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterContainer" type="CenterContainer" parent="Panel/MarginContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="LeftPanel/MarginContainer"]
 layout_mode = 2
 
-[node name="ClickButton" type="TextureButton" parent="Panel/MarginContainer/CenterContainer"]
+[node name="ClickButton" type="TextureButton" parent="LeftPanel/MarginContainer/CenterContainer"]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 texture_normal = ExtResource("1_uwrxv")
 ignore_texture_size = true
 stretch_mode = 0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="LeftPanel"]
+root_node = NodePath("../BackgroundTextureRect")
+libraries = {
+&"": SubResource("AnimationLibrary_gee14")
+}
+autoplay = "sunburst_rotate"
 
 [node name="UpgradePanel" type="Panel" parent="."]
 layout_mode = 1
@@ -110,7 +167,7 @@ text = "Upgrades"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[connection signal="on_cookies_changed" from="." to="Panel/MarginContainer/StatsContainer" method="_on_game_on_cookies_changed"]
-[connection signal="button_down" from="Panel/MarginContainer/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
-[connection signal="button_down" from="Panel/MarginContainer/CenterContainer/ClickButton" to="Panel/MarginContainer" method="_on_click_button_button_down"]
-[connection signal="button_up" from="Panel/MarginContainer/CenterContainer/ClickButton" to="Panel/MarginContainer" method="_on_click_button_button_up"]
+[connection signal="on_cookies_changed" from="." to="LeftPanel/MarginContainer/StatsContainer" method="_on_game_on_cookies_changed"]
+[connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
+[connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_down"]
+[connection signal="button_up" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_up"]
