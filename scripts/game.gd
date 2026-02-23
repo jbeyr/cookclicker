@@ -42,7 +42,6 @@ func _process(delta: float) -> void:
 		UnorderedEventBus.cookies_changed.emit(cookies)
 		UnorderedEventBus.total_cookies_changed.emit(total_cookies)
 		
-	# Autoclicker Debug Logic
 	if debug_autoclicker_enabled and debug_autoclicker_cps > 0:
 		if click_button and click_button.is_hovered():
 			_autoclick_timer += delta
@@ -51,7 +50,7 @@ func _process(delta: float) -> void:
 				_on_click_button_button_down()
 				_autoclick_timer -= interval
 		else:
-			_autoclick_timer = 0.0 # Reset so it doesn't "burst" click when you hover back over
+			_autoclick_timer = 0.0 # reset so it doesnt click when you hover back over
 
 func _save_game():
 	var upgrade_data = {}
@@ -77,7 +76,7 @@ func _load_game():
 	
 	_recalculate_stats()
 	
-	# Sync UI after loading
+	# sync ui after loading
 	for id in upgrades:
 		UnorderedEventBus.upgrade_purchased.emit(id, upgrades[id].count)
 		
@@ -108,7 +107,7 @@ func _ready() -> void:
 	add_child(timer)
 	timer.start(autosave_interval)
 	
-	# Connect UI buttons
+	# connect ui buttons
 	var reset_btn = find_child("WipeSaveButton", true, false)
 	if reset_btn:
 		reset_btn.pressed.connect(func(): UnorderedEventBus.game_reset.emit())
@@ -120,7 +119,7 @@ func _init_upgrades():
 
 func _on_upgrade_announced(data: UpgradeResource):
 	if not upgrades.has(data.id):
-		# Create a local state instance of the resource
+		# create a local state instance of the resource
 		var up_instance = data.duplicate()
 		upgrades[up_instance.id] = up_instance
 		_recalculate_stats()

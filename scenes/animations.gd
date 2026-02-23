@@ -5,7 +5,7 @@ extends MarginContainer
 @onready var indicators = $"../../Indicators"
 
 func _ready() -> void:
-	# Set pivot to center (200x200 button size)
+	# set pivot to center (200x200 button size) because im too dumb to find this in the editor
 	click_button.pivot_offset = click_button.size / 2
 	UnorderedEventBus.cookie_clicked.connect(_on_cookie_clicked)
 

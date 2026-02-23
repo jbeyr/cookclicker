@@ -10,9 +10,9 @@ signal cookies_per_click_changed
 signal cookie_clicked(amount)
 
 # game state machine (paused, running, etc)
-signal game_state_changed
+signal game_state_changed # TODO impl
 
-signal sfx_requested(sfx_name: String)
+signal sfx_requested(sfx_name: String) # TODO impl
 
 signal upgrade_purchased(upgrade_id: String, new_count: int)
 signal upgrade_requested(upgrade_id: String)

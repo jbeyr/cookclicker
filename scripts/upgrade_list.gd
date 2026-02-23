@@ -3,7 +3,7 @@ extends VBoxContainer
 @export var upgrade_button_script: Script = preload("res://scripts/upgrade_button.gd")
 
 func _ready() -> void:
-	# Small delay to ensure game.gd has initialized upgrades
+	# dumb hacky delay to ensure game.gd has initialized upgrades
 	await get_tree().process_frame
 	
 	var game_node = get_tree().root.find_child("Game", true, false)
@@ -19,7 +19,6 @@ func _create_upgrade_button(upgrade: UpgradeResource):
 	
 	btn.custom_minimum_size.y = 80
 	
-	# Layout
 	var hbox = HBoxContainer.new()
 	hbox.name = "HBox"
 	hbox.set_anchors_preset(Control.PRESET_FULL_RECT)

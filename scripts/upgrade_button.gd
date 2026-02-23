@@ -47,7 +47,8 @@ func _update_visibility(total: float):
 		visible = total >= threshold
 
 func _update_ui():
-	# In tool mode, @onready might not have run yet if the setter is called early
+	# in tool mode, @onready might not have run yet if the setter is called early
+	# so we check if the labels exist and get them by name if they don't
 	var t_label = title_label if title_label else get_node_or_null("HBox/VBox/Title")
 	var c_label = cost_label if cost_label else get_node_or_null("HBox/VBox/Cost")
 	var n_label = count_label if count_label else get_node_or_null("HBox/Count")

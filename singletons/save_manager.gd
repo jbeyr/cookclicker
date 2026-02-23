@@ -10,7 +10,7 @@ var settings_data: Dictionary = {}
 func _ready() -> void:
 	load_settings()
 
-# --- Game Data ---
+# game data
 func save_game(data: Dictionary = {}) -> void:
 	if not data.is_empty():
 		game_data = data
@@ -43,7 +43,7 @@ func delete_save() -> void:
 	if FileAccess.file_exists(SAVE_PATH):
 		DirAccess.remove_absolute(SAVE_PATH)
 
-# --- Settings ---
+# settings
 func save_settings(data: Dictionary = {}) -> void:
 	if not data.is_empty():
 		settings_data.merge(data, true)
