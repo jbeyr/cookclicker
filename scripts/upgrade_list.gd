@@ -12,7 +12,7 @@ func _ready() -> void:
 			var upgrade = game_node.upgrades[upgrade_id]
 			_create_upgrade_button(upgrade)
 
-func _create_upgrade_button(upgrade: UpgradeResource):
+func _create_upgrade_button(upgrade: UpgradeResource) -> void:
 	var btn = Button.new()
 	btn.set_script(upgrade_button_script)
 	btn.upgrade_data = upgrade
