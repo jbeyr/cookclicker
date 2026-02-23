@@ -7,7 +7,15 @@ extends Control
 @export var cookies_per_second = 0.0
 @export var click_multiplier = 1.0
 @export var double_click_chance = 0.0
-@export var autosave_interval = 60.0
+@export var autosave_interval = 10.0
+
+@export_group("Debug")
+@export var debug_autoclicker_enabled = false
+@export var debug_autoclicker_cps = 10.0
+
+@onready var click_button = find_child("ClickButton", true, false)
+
+var _autoclick_timer = 0.0
 
 var upgrades: Dictionary = {}
 
@@ -33,6 +41,17 @@ func _process(delta: float) -> void:
 		total_cookies += gain
 		EventBus.cookies_changed.emit(cookies)
 		EventBus.total_cookies_changed.emit(total_cookies)
+		
+	# Autoclicker Debug Logic
+	if debug_autoclicker_enabled and debug_autoclicker_cps > 0:
+		if click_button and click_button.is_hovered():
+			_autoclick_timer += delta
+			var interval = 1.0 / debug_autoclicker_cps
+			while _autoclick_timer >= interval:
+				_on_click_button_button_down()
+				_autoclick_timer -= interval
+		else:
+			_autoclick_timer = 0.0 # Reset so it doesn't "burst" click when you hover back over
 
 func _save_game():
 	var upgrade_data = {}
@@ -80,7 +99,7 @@ func _ready() -> void:
 	_load_game()
 	
 	EventBus.cookies_changed.emit(cookies)
-	EventBus.total_cookies_changed.emit(total_cookies) # Added this line
+	EventBus.total_cookies_changed.emit(total_cookies)
 	EventBus.cookies_per_second_changed.emit(cookies_per_second)
 	
 	# init autosave timer
