@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://d2fdxd045jrlx"]
+[gd_scene load_steps=23 format=3 uid="uid://d2fdxd045jrlx"]
 
 [ext_resource type="Texture2D" uid="uid://h57tj6qm6a6r" path="res://assets/cookie.png" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://d1t24il8ynhho" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -7,6 +7,8 @@
 [ext_resource type="FontFile" uid="uid://bf8i1yxmqhlhu" path="res://assets/Fredoka/static/Fredoka-Regular.ttf" id="4_lbhrr"]
 [ext_resource type="FontFile" uid="uid://dr8gcsaa6uhvv" path="res://assets/Fredoka/static/Fredoka-Bold.ttf" id="5_iywne"]
 [ext_resource type="Texture2D" uid="uid://2b4ad45qwtbr" path="res://assets/sunburst.png" id="6_u5sy4"]
+[ext_resource type="PackedScene" uid="uid://bm8l5x4q8y3j2" path="res://scenes/upgrade_button.tscn" id="8_gee14"]
+[ext_resource type="Script" uid="uid://bxn11glcmqybi" path="res://scripts/upgrade_resource.gd" id="9_0tnpc"]
 
 [sub_resource type="GDScript" id="GDScript_u5sy4"]
 script/source = "extends Label
@@ -66,6 +68,69 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="Resource" id="Resource_0tnpc"]
+script = ExtResource("9_0tnpc")
+id = "cursor"
+title = "Lazy Cursor"
+description = "You, but paid minimum wage!"
+base_cost = 10.0
+cookies_per_second_bonus = 0.1
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
+
+[sub_resource type="Resource" id="Resource_vtaks"]
+script = ExtResource("9_0tnpc")
+id = "grandma"
+title = "Grandma"
+description = "Bakes cookies better than your friends!"
+base_cost = 50.0
+cookies_per_second_bonus = 1.0
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
+
+[sub_resource type="Resource" id="Resource_trtic"]
+script = ExtResource("9_0tnpc")
+id = "bakery"
+title = "Bakery"
+description = "Makes a lot of cookies!"
+base_cost = 100.0
+cookies_per_second_bonus = 10.0
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
+
+[sub_resource type="Resource" id="Resource_ir15t"]
+script = ExtResource("9_0tnpc")
+id = "factory"
+title = "Factory"
+description = "Lots more cookies than grandma!"
+base_cost = 1000.0
+cookies_per_second_bonus = 50.0
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
+
+[sub_resource type="Resource" id="Resource_dinhu"]
+script = ExtResource("9_0tnpc")
+id = "efficiency"
+title = "Efficiency"
+description = "Increases base cookies per click!"
+base_cost = 10.0
+cookies_per_click_bonus = 0.1
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
+
+[sub_resource type="Resource" id="Resource_kvpfn"]
+script = ExtResource("9_0tnpc")
+id = "lower_debounce"
+title = "Lower Debounce"
+description = "For a chance to double click!"
+base_cost = 30.0
+double_click_chance = 0.15
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
+
+[sub_resource type="Resource" id="Resource_kvuet"]
+script = ExtResource("9_0tnpc")
+id = "fortune"
+title = "Fortune"
+description = "Multiplies cookies per click!"
+base_cost = 50.0
+click_multiplier_bonus = 1.05
+metadata/_custom_type_script = "uid://bxn11glcmqybi"
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -195,6 +260,48 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_iywne")
 text = "Upgrades"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UpgradePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="UpgradeList" type="VBoxContainer" parent="UpgradePanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="UpgradeButtonClicker" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_0tnpc")
+
+[node name="UpgradeButtonGrandma" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_vtaks")
+
+[node name="UpgradeButtonBakery" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_trtic")
+
+[node name="UpgradeButtonFactory" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_ir15t")
+
+[node name="UpgradeButtonEfficiency" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_dinhu")
+
+[node name="UpgradeButtonLowerDebounce" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_kvpfn")
+
+[node name="UpgradeButtonFortune" parent="UpgradePanel/ScrollContainer/UpgradeList" instance=ExtResource("8_gee14")]
+layout_mode = 2
+upgrade_data = SubResource("Resource_kvuet")
 
 [connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template" method="_on_destroy_timer_timeout"]
 [connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template/DestroyTimer" method="_on_timeout"]

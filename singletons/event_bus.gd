@@ -12,3 +12,7 @@ signal cookie_clicked(amount)
 signal game_state_changed
 
 signal sfx_requested(sfx_name: String)
+
+signal upgrade_purchased(upgrade_id: String, new_count: int)
+signal upgrade_requested(upgrade_id: String)
+signal upgrade_announced(data: UpgradeResource) # so we can create new upgrades on the fly via ui
