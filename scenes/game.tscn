@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d2fdxd045jrlx"]
+[gd_scene load_steps=14 format=3 uid="uid://d2fdxd045jrlx"]
 
 [ext_resource type="Texture2D" uid="uid://h57tj6qm6a6r" path="res://assets/cookie.png" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://d1t24il8ynhho" path="res://scripts/game.gd" id="1_yqjtg"]
@@ -7,6 +7,14 @@
 [ext_resource type="FontFile" uid="uid://bf8i1yxmqhlhu" path="res://assets/Fredoka/static/Fredoka-Regular.ttf" id="4_lbhrr"]
 [ext_resource type="FontFile" uid="uid://dr8gcsaa6uhvv" path="res://assets/Fredoka/static/Fredoka-Bold.ttf" id="5_iywne"]
 [ext_resource type="Texture2D" uid="uid://2b4ad45qwtbr" path="res://assets/sunburst.png" id="6_u5sy4"]
+
+[sub_resource type="GDScript" id="GDScript_u5sy4"]
+script/source = "extends Label
+
+
+func _on_destroy_timer_timeout() -> void:
+	queue_free()
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lnu2h"]
 
@@ -67,6 +75,27 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_yqjtg")
+
+[node name="Indicators" type="Control" parent="."]
+top_level = true
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Template" type="Label" parent="Indicators"]
+visible = false
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("4_lbhrr")
+theme_override_font_sizes/font_size = 30
+text = "+0"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = SubResource("GDScript_u5sy4")
+
+[node name="DestroyTimer" type="Timer" parent="Indicators/Template"]
 
 [node name="LeftPanel" type="Panel" parent="."]
 layout_mode = 1
@@ -167,7 +196,10 @@ text = "Upgrades"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="on_cookie_physically_clicked" from="." to="LeftPanel/MarginContainer" method="_on_game_on_cookie_physically_clicked"]
 [connection signal="on_cookies_changed" from="." to="LeftPanel/MarginContainer/StatsContainer" method="_on_game_on_cookies_changed"]
+[connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template" method="_on_destroy_timer_timeout"]
+[connection signal="timeout" from="Indicators/Template/DestroyTimer" to="Indicators/Template/DestroyTimer" method="_on_timeout"]
 [connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="." method="_on_click_button_button_down"]
 [connection signal="button_down" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_down"]
 [connection signal="button_up" from="LeftPanel/MarginContainer/CenterContainer/ClickButton" to="LeftPanel/MarginContainer" method="_on_click_button_button_up"]

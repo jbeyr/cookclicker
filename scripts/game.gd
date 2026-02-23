@@ -7,6 +7,7 @@ const save_path = "user://userdata.save"
 @export var autosave_interval = 60.0
 
 signal on_cookies_changed
+signal on_cookie_physically_clicked
 
 func _notification(notif_type: int) -> void:
 	if notif_type == NOTIFICATION_WM_CLOSE_REQUEST or notif_type == NOTIFICATION_APPLICATION_PAUSED:
@@ -15,6 +16,7 @@ func _notification(notif_type: int) -> void:
 func _on_click_button_button_down() -> void:
 	cookies += cookies_per_click
 	on_cookies_changed.emit(cookies)
+	on_cookie_physically_clicked.emit(cookies_per_click)
 
 func savegame():
 	var dat = {
