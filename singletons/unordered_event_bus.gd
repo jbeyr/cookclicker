@@ -7,7 +7,7 @@ signal cookies_changed(amount: float)
 signal total_cookies_changed(amount: float)
 signal cookies_per_second_changed(amount: float)
 signal cookies_per_click_changed(amount: float)
-signal cookie_clicked(amount: float)
+signal cookie_clicked(amount: float, pos: Vector2)
 
 # game state machine (paused, running, etc)
 signal game_state_changed # TODO impl

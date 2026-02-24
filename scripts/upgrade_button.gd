@@ -6,9 +6,9 @@ extends Button
 		upgrade_data = value
 		_update_ui()
 
-@onready var title_label: Label = $HBox/VBox/Title
-@onready var cost_label: Label = $HBox/VBox/Cost
-@onready var count_label: Label = $HBox/Count
+@onready var title_label: Label = $VBox/Title
+@onready var cost_label: Label = $VBox/Cost
+@onready var count_label: Label = $VBox/Count
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -19,6 +19,8 @@ func _ready() -> void:
 		UnorderedEventBus.upgrade_purchased.connect(_on_upgrade_purchased)
 		UnorderedEventBus.cookies_changed.connect(_on_cookies_changed)
 		UnorderedEventBus.total_cookies_changed.connect(_on_total_cookies_changed)
+		
+		focus_mode = FOCUS_NONE # ensure virtual cursor is used
 	
 	_update_ui()
 
@@ -49,9 +51,9 @@ func _update_visibility(total: float) -> void:
 func _update_ui() -> void:
 	# in tool mode, @onready might not have run yet if the setter is called early
 	# so we check if the labels exist and get them by name if they don't
-	var t_label = title_label if title_label else get_node_or_null("HBox/VBox/Title")
-	var c_label = cost_label if cost_label else get_node_or_null("HBox/VBox/Cost")
-	var n_label = count_label if count_label else get_node_or_null("HBox/Count")
+	var t_label = title_label if title_label else get_node_or_null("VBox/Title")
+	var c_label = cost_label if cost_label else get_node_or_null("VBox/Cost")
+	var n_label = count_label if count_label else get_node_or_null("VBox/Count")
 
 	if not upgrade_data or not t_label: return
 	
