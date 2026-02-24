@@ -3,11 +3,11 @@
 extends Node
 
 
-signal cookies_changed
-signal total_cookies_changed
-signal cookies_per_second_changed
-signal cookies_per_click_changed
-signal cookie_clicked(amount)
+signal cookies_changed(amount: float)
+signal total_cookies_changed(amount: float)
+signal cookies_per_second_changed(amount: float)
+signal cookies_per_click_changed(amount: float)
+signal cookie_clicked(amount: float)
 
 # game state machine (paused, running, etc)
 signal game_state_changed # TODO impl

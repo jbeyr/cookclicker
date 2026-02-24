@@ -1,21 +1,21 @@
 extends Control
 
-@export var cookies = 0.0
-@export var total_cookies = 0.0
+@export var cookies: float = 0.0
+@export var total_cookies: float = 0.0
 @export var upgrade_definitions: Array[UpgradeResource] = []
-@export var cookies_per_click = 1.0
-@export var cookies_per_second = 0.0
-@export var click_multiplier = 1.0
-@export var double_click_chance = 0.0
-@export var autosave_interval = 10.0
+@export var cookies_per_click: float = 1.0
+@export var cookies_per_second: float = 0.0
+@export var click_multiplier: float = 1.0
+@export var double_click_chance: float = 0.0
+@export var autosave_interval: float = 10.0
 
 @export_group("Debug")
-@export var debug_autoclicker_enabled = false
-@export var debug_autoclicker_cps = 10.0
+@export var debug_autoclicker_enabled: bool = false
+@export var debug_autoclicker_cps: float = 10.0
 
-@onready var click_button = find_child("ClickButton", true, false)
+@onready var click_button: TextureButton = find_child("ClickButton", true, false)
 
-var _autoclick_timer = 0.0
+var _autoclick_timer: float = 0.0
 
 var upgrades: Dictionary = {}
 
@@ -24,7 +24,7 @@ func _notification(notif_type: int) -> void:
 		_save_game()
 
 func _on_click_button_button_down() -> void:
-	var amt = cookies_per_click * click_multiplier
+	var amt: float = cookies_per_click * click_multiplier
 	if randf() < double_click_chance:
 		amt *= 2.0
 	
@@ -36,7 +36,7 @@ func _on_click_button_button_down() -> void:
 
 func _process(delta: float) -> void:
 	if cookies_per_second > 0:
-		var gain = cookies_per_second * delta
+		var gain: float = cookies_per_second * delta
 		cookies += gain
 		total_cookies += gain
 		UnorderedEventBus.cookies_changed.emit(cookies)
@@ -45,26 +45,26 @@ func _process(delta: float) -> void:
 	if debug_autoclicker_enabled and debug_autoclicker_cps > 0:
 		if click_button and click_button.is_hovered():
 			_autoclick_timer += delta
-			var interval = 1.0 / debug_autoclicker_cps
+			var interval: float = 1.0 / debug_autoclicker_cps
 			while _autoclick_timer >= interval:
 				_on_click_button_button_down()
 				_autoclick_timer -= interval
 		else:
 			_autoclick_timer = 0.0 # reset so it doesnt click when you hover back over
 
-func _save_game():
-	var upgrade_data = {}
+func _save_game() -> void:
+	var upgrade_data: Dictionary = {}
 	for id in upgrades:
 		upgrade_data[id] = upgrades[id].count
 		
-	var dat = {
+	var dat: Dictionary = {
 		"cookies": cookies,
 		"total_cookies": total_cookies,
 		"upgrades": upgrade_data
 	}
 	SaveManager.save_game(dat)
 
-func _load_game():
+func _load_game() -> void:
 	var dat = SaveManager.load_game()
 	if not dat.is_empty():
 		cookies = dat.get("cookies", 0.0)
@@ -82,7 +82,7 @@ func _load_game():
 		
 	print("loaded game")
 
-func reset_game():
+func reset_game() -> void:
 	SaveManager.delete_save()
 	get_tree().reload_current_scene()
 
@@ -102,7 +102,7 @@ func _ready() -> void:
 	UnorderedEventBus.cookies_per_second_changed.emit(cookies_per_second)
 	
 	# init autosave timer
-	var timer = Timer.new()
+	var timer: Timer = Timer.new()
 	timer.timeout.connect(_save_game)
 	add_child(timer)
 	timer.start(autosave_interval)
@@ -112,12 +112,12 @@ func _ready() -> void:
 	if reset_btn:
 		reset_btn.pressed.connect(func(): UnorderedEventBus.game_reset.emit())
 
-func _init_upgrades():
+func _init_upgrades() -> void:
 	for upgrade in upgrade_definitions:
 		var up_instance = upgrade.duplicate()
 		upgrades[up_instance.id] = up_instance
 
-func _on_upgrade_announced(data: UpgradeResource):
+func _on_upgrade_announced(data: UpgradeResource) -> void:
 	if not upgrades.has(data.id):
 		# create a local state instance of the resource
 		var up_instance = data.duplicate()
@@ -125,13 +125,13 @@ func _on_upgrade_announced(data: UpgradeResource):
 		_recalculate_stats()
 		print("Auto-discovered upgrade: ", up_instance.id)
 
-func _on_upgrade_requested(id: String):
+func _on_upgrade_requested(id: String) -> void:
 	if not upgrades.has(id):
-		print("ERROR: Game doesn't know about upgrade ID: ", id)
+		push_error("Game doesn't know about upgrade ID: " + id)
 		return
 		
-	var up = upgrades[id]
-	var cost = up.get_cost()
+	var up: UpgradeResource = upgrades[id]
+	var cost: float = up.get_cost()
 	
 	if cookies >= cost:
 		cookies -= cost
@@ -143,14 +143,14 @@ func _on_upgrade_requested(id: String):
 	else:
 		print("FAIL: Not enough cookies for ", id, " (Need ", cost, ")")
 
-func _recalculate_stats():
-	var new_cpc = 1.0
-	var new_cps = 0.0
-	var new_mult = 1.0
-	var new_crit = 0.0
+func _recalculate_stats() -> void:
+	var new_cpc: float = 1.0
+	var new_cps: float = 0.0
+	var new_mult: float = 1.0
+	var new_crit: float = 0.0
 	
 	for id in upgrades:
-		var up = upgrades[id]
+		var up: UpgradeResource = upgrades[id]
 		new_cpc += up.cookies_per_click_bonus * up.count
 		new_cps += up.cookies_per_second_bonus * up.count
 		new_mult += up.click_multiplier_bonus * up.count
